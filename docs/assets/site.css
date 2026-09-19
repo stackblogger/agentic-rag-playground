@@ -409,6 +409,13 @@ section.soft {
   display: block;
 }
 
+/* the picture is tall, so keep it inside one screen and centered. Click opens it full size */
+.figure img {
+  width: auto;
+  max-height: 70vh;
+  margin-inline: auto;
+}
+
 .figure-caption {
   margin-top: 16px;
   text-align: center;
