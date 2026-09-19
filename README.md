@@ -25,8 +25,9 @@ This repo is for learning and experimenting. Devs can clone it, play with it, br
 ```
 agentic-rag-playground/
 ├── src/agentic_rag/
-│   ├── api/          # API routes (upload, search, chat)
+│   ├── api/          # API routes, only take the request and give the response (upload, search, chat)
 │   ├── core/         # config, settings, logging
+│   ├── services/     # main logic of each feature, used by the API routes
 │   ├── db/           # database connection and models (SQLAlchemy)
 │   ├── ingestion/    # read file, extract text, make chunks
 │   ├── retrieval/    # embeddings and search logic
@@ -60,7 +61,7 @@ agentic-rag-playground/
    pip install -r requirements.txt
    ```
 
-3. Copy the env file. The defaults work for local run, change the values if needed.
+3. Copy the env file. The defaults work for local run, change the values if needed. Set `OPENAI_API_KEY` in it, because embeddings are made with OpenAI.
 
    ```bash
    cp .env.example .env
@@ -98,7 +99,7 @@ agentic-rag-playground/
 curl -X POST http://127.0.0.1:8000/documents -F "file=@/path/to/file.pdf"
 ```
 
-The file is saved in `UPLOAD_DIR` and the text is extracted page by page with pypdf. The text is saved in the database, and then cut into small chunks for search. The response looks like this:
+The file is saved in `UPLOAD_DIR` and the text is extracted page by page with pypdf. The text is saved in the database, and then cut into small chunks. An embedding is made for each chunk with LiteLLM (OpenAI by default) and saved with the chunk, so it can be searched. The response looks like this:
 
 ```json
 {"id": 1, "filename": "file.pdf", "page_count": 12, "chunk_count": 34, "status": "processed"}
@@ -107,6 +108,7 @@ The file is saved in `UPLOAD_DIR` and the text is extracted page by page with py
 - Chunks are cut page by page, so a chunk never goes across two pages. Each chunk keeps its page number. Chunks next to each other share some text (`CHUNK_OVERLAP`), so a sentence at the edge is not lost. Words are not cut in the middle when possible.
 - Only `.pdf` files are allowed. Other files get a 400 error.
 - If pypdf cannot read the file, the response is a 422 error and the document is saved with status `failed`.
+- If the embeddings cannot be made (for example the API key is missing or wrong), the response is a 502 error, the document is saved with status `failed`, and no chunks are saved.
 - PDFs that are only scanned images have no text to extract, so the saved text will be empty.
 
 The upload can also be tried from the API docs page at http://127.0.0.1:8000/docs.
@@ -136,6 +138,7 @@ All settings are read from environment variables or the `.env` file (see `.env.e
 | `UPLOAD_DIR` | Folder where uploaded files are kept | `data/uploads` |
 | `LLM_MODEL` | Model name used for chat (any LiteLLM model) | `gpt-4o-mini` |
 | `EMBEDDING_MODEL` | Model name used for embeddings | `text-embedding-3-small` |
+| `OPENAI_API_KEY` | API key for OpenAI, read by LiteLLM | empty |
 | `CHUNK_SIZE` | Maximum number of characters in one chunk | `1000` |
 | `CHUNK_OVERLAP` | Number of characters shared between two chunks next to each other | `200` |
 
