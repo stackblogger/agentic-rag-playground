@@ -116,7 +116,7 @@ The upload can also be tried from the API docs page at http://127.0.0.1:8000/doc
 ### Search
 
 ```bash
-curl "http://127.0.0.1:8000/search?query=capital%20call%20amount&limit=5"
+curl "http://127.0.0.1:8000/search?query=how%20long%20do%20cats%20sleep&limit=5"
 ```
 
 The query is converted to an embedding with the same model, and the chunks with the closest meaning are returned, best match first. `limit` is how many chunks to return. It is 5 by default and can be from 1 to 20. Each result looks like this:
@@ -135,6 +135,29 @@ The query is converted to an embedding with the same model, and the chunks with 
 - `score` is cosine similarity. Higher is better, and 1 means the same meaning.
 - Chunks without an embedding are skipped.
 - An empty query gives a 422 error. If the embedding cannot be made, the response is a 502 error.
+
+### Chat
+
+```bash
+curl -X POST http://127.0.0.1:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"question": "How long do cats sleep in a day?", "limit": 5}'
+```
+
+The question is searched in the documents first. The best chunks are then given to the LLM (`LLM_MODEL`) as context, and it answers only from them. `limit` is how many chunks are given as context. It is 5 by default and can be from 1 to 10. The response looks like this:
+
+```json
+{
+  "answer": "Cats sleep about 12 to 16 hours in a day [1].",
+  "sources": [
+    {"number": 1, "chunk_id": 26, "document_id": 16, "filename": "file.pdf", "page_number": 1}
+  ]
+}
+```
+
+- The numbers in the answer, like `[1]`, match the `number` in `sources`.
+- If nothing is found in the documents, the answer says so and the LLM is not called.
+- An empty question gives a 422 error. If the embedding or the LLM call fails, the response is a 502 error.
 
 ## Database migrations
 
