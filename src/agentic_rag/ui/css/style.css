@@ -12,3 +12,39 @@
   max-height: 20rem;
   overflow-y: auto;
 }
+
+.chat-thread {
+  min-height: 20rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.chat-row {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.chat-row-user {
+  justify-content: flex-end;
+}
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 0.75rem;
+  word-break: break-word;
+}
+
+.chat-bubble-user {
+  background: var(--tblr-primary);
+  color: #fff;
+  white-space: pre-wrap;
+}
+
+.chat-bubble-bot {
+  background: var(--tblr-bg-surface-secondary);
+}
+
+.chat-answer {
+  white-space: pre-wrap;
+}

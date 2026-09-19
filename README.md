@@ -89,7 +89,7 @@ agentic-rag-playground/
    uvicorn agentic_rag.api.main:app --app-dir src --reload
    ```
 
-7. Open http://127.0.0.1:8000 for the web UI. The Status page shows if the API and the database are working, and the Documents page is for uploading PDFs, and the Search page is for searching inside them. API docs are at http://127.0.0.1:8000/docs, and http://127.0.0.1:8000/health returns `{"status": "ok"}`.
+7. Open http://127.0.0.1:8000 for the web UI. The Status page shows if the API and the database are working, and the Documents page is for uploading PDFs, the Search page is for searching inside them, and the Chat page is for asking questions. API docs are at http://127.0.0.1:8000/docs, and http://127.0.0.1:8000/health returns `{"status": "ok"}`.
 
 8. Check the database connection. Open http://127.0.0.1:8000/health/db. It shows `{"status": "ok"}` when Postgres is reachable, and a 503 error when it is not.
 
@@ -99,6 +99,7 @@ The web UI is at http://127.0.0.1:8000. It uses the same API routes that are lis
 
 - **Documents**: upload a PDF, see all uploaded documents with their pages, chunks, size and status, and delete a document.
 - **Search**: type a query and see the chunks with the closest meaning, with file name, page number and score. The number of results can be 3, 5, 10 or 20.
+- **Chat**: ask questions and get answers made from the documents, with the sources (file name and page) shown under each answer. The number of chunks used from each search can be 3, 5 or 10. Each question is answered on its own, earlier questions are not remembered.
 - **Status**: shows if the API and the database are working.
 
 The UI files are in `src/agentic_rag/ui/`. They are plain HTML, CSS and JavaScript, so no build step is needed. The Tabler template and its icons are loaded from a CDN, so internet is needed to open the UI.
