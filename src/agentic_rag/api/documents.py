@@ -28,3 +28,27 @@ def upload_document(file: UploadFile, db: Session = Depends(get_db)):
         "chunk_count": chunk_count,
         "status": document.status,
     }
+
+
+@router.get("")
+def list_documents(db: Session = Depends(get_db)):
+    return [
+        {
+            "id": document.id,
+            "filename": document.filename,
+            "page_count": document.page_count,
+            "chunk_count": chunk_count,
+            "size_bytes": document.size_bytes,
+            "status": document.status,
+            "created_at": document.created_at,
+        }
+        for document, chunk_count in document_service.list_documents(db)
+    ]
+
+
+@router.delete("/{document_id}", status_code=204)
+def delete_document(document_id: int, db: Session = Depends(get_db)):
+    try:
+        document_service.delete_document(db, document_id)
+    except document_service.DocumentNotFoundError as error:
+        raise HTTPException(status_code=404, detail=str(error))

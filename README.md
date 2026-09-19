@@ -113,6 +113,22 @@ The file is saved in `UPLOAD_DIR` and the text is extracted page by page with py
 
 The upload can also be tried from the API docs page at http://127.0.0.1:8000/docs.
 
+### List documents
+
+```bash
+curl http://127.0.0.1:8000/documents
+```
+
+This gives all uploaded documents, newest first, with their page count, chunk count, size and status.
+
+### Delete a document
+
+```bash
+curl -X DELETE http://127.0.0.1:8000/documents/1
+```
+
+This removes the document, all its chunks and the saved file. The response is 204 when it is done, and 404 if the id does not exist.
+
 ### Search
 
 ```bash

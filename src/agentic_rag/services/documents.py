@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import BinaryIO
 from uuid import uuid4
 
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from agentic_rag.core.config import settings
@@ -18,6 +19,10 @@ class InvalidFileError(Exception):
 
 
 class PdfReadError(Exception):
+    pass
+
+
+class DocumentNotFoundError(Exception):
     pass
 
 
@@ -89,3 +94,24 @@ def upload_document(
     db.refresh(document)
 
     return document, len(pieces)
+
+
+def list_documents(db: Session) -> list[tuple[Document, int]]:
+    query = (
+        select(Document, func.count(Chunk.id))
+        .outerjoin(Chunk, Chunk.document_id == Document.id)
+        .group_by(Document.id)
+        .order_by(Document.id.desc())
+    )
+    return [(document, chunk_count) for document, chunk_count in db.execute(query).all()]
+
+
+def delete_document(db: Session, document_id: int) -> None:
+    document = db.get(Document, document_id)
+    if document is None:
+        raise DocumentNotFoundError("Document not found")
+
+    file_path = Path(document.file_path)
+    db.delete(document)
+    db.commit()
+    file_path.unlink(missing_ok=True)
