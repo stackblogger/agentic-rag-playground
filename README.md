@@ -45,7 +45,6 @@ agentic-rag-playground/
 ├── tests/
 │   ├── unit/         # small tests
 │   └── integration/  # tests that need DB / API
-├── scripts/          # helper scripts
 ├── docs/             # extra notes and design docs
 ├── data/uploads/     # uploaded files are kept here
 └── docker/           # Docker related files (start script of the app container)
