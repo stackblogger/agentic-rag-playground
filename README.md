@@ -20,7 +20,7 @@ This repo is for learning and experimenting. Devs can clone it, play with it, br
 - Tabler (Bootstrap based UI template, loaded from a CDN) with plain JavaScript, no build step
 - marked and DOMPurify (loaded from a CDN) to show the chat answers as formatted text
 - SQLAlchemy (ORM) and Alembic (database migrations)
-- Docker Compose (to run Postgres locally)
+- Docker and Docker Compose (to run the app and Postgres)
 
 ## Folder structure
 
@@ -38,16 +38,54 @@ agentic-rag-playground/
 │   └── ui/           # web UI (plain HTML, CSS and JS, served by the app)
 ├── migrations/       # Alembic migration files
 ├── alembic.ini       # Alembic config
+├── Dockerfile        # image of the app
+├── docker-compose.yml # app and Postgres containers
 ├── tests/
 │   ├── unit/         # small tests
 │   └── integration/  # tests that need DB / API
 ├── scripts/          # helper scripts
 ├── docs/             # extra notes and design docs
 ├── data/uploads/     # uploaded files are kept here
-└── docker/           # Docker related files
+└── docker/           # Docker related files (start script of the app container)
 ```
 
 ## How to run
+
+### With Docker (one command)
+
+Docker and Docker Compose are needed. Python does not need to be installed.
+
+1. Clone the repo
+
+   ```bash
+   git clone https://github.com/stackblogger/agentic-rag-playground.git
+   cd agentic-rag-playground
+   ```
+
+2. Copy the env file and set `OPENAI_API_KEY` in it, because embeddings and answers are made with OpenAI.
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Build and start everything
+
+   ```bash
+   docker compose up -d --build
+   ```
+
+4. Open http://127.0.0.1:8000 for the web UI.
+
+This starts two containers: `agentic-rag-db` (Postgres with pgvector) and `agentic-rag-app` (the app). The app waits for the database, runs the migrations, and then starts.
+
+- The app talks to the database with the container name `agentic-rag-db`. `DATABASE_URL` and `UPLOAD_DIR` in `.env` are ignored in Docker, because the compose file sets them. The other settings are read from `.env`.
+- Uploaded files are kept in `data/uploads/` on the local machine. Database data is kept in a Docker volume, so it stays when the containers are stopped.
+- To see the app logs, run `docker compose logs -f app`. To stop everything, run `docker compose down`.
+- After changing the code, run `docker compose up -d --build` again.
+
+### Without Docker for the app
+
+Only Postgres runs in Docker here, and the app runs on the local machine. Python 3.11+ is needed.
 
 1. Clone the repo
 
@@ -59,21 +97,21 @@ agentic-rag-playground/
 2. Make a virtual environment and install packages
 
    ```bash
-   python -m venv .venv
+   python3 -m venv .venv
    source .venv/bin/activate
    pip install -r requirements.txt
    ```
 
-3. Copy the env file. The defaults work for local run, change the values if needed. Set `OPENAI_API_KEY` in it, because embeddings are made with OpenAI.
+3. Copy the env file. The defaults work for local run, change the values if needed. Set `OPENAI_API_KEY` in it, because embeddings and answers are made with OpenAI.
 
    ```bash
    cp .env.example .env
    ```
 
-4. Start Postgres (with pgvector) in Docker. The container name is `agentic-rag-db`.
+4. Start only Postgres (with pgvector) in Docker. The container name is `agentic-rag-db`.
 
    ```bash
-   docker compose up -d
+   docker compose up -d db
    ```
 
    The db user, password and name are `postgres`, `postgres` and `agentic_rag`, same as the default `DATABASE_URL`. Data is kept in a Docker volume, so it stays even if the container is restarted.
@@ -90,9 +128,11 @@ agentic-rag-playground/
    uvicorn agentic_rag.api.main:app --app-dir src --reload
    ```
 
-7. Open http://127.0.0.1:8000 for the web UI. The Status page shows if the API and the database are working, and the Documents page is for uploading PDFs, the Search page is for searching inside them, and the Chat page is for asking questions. API docs are at http://127.0.0.1:8000/docs, and http://127.0.0.1:8000/health returns `{"status": "ok"}`.
+7. Open http://127.0.0.1:8000 for the web UI. It uses port 8000, so the app container must not be running at the same time.
 
-8. Check the database connection. Open http://127.0.0.1:8000/health/db. It shows `{"status": "ok"}` when Postgres is reachable, and a 503 error when it is not.
+### After it is running
+
+The Status page in the web UI shows if the API and the database are working. API docs are at http://127.0.0.1:8000/docs, and http://127.0.0.1:8000/health returns `{"status": "ok"}`. The database connection can be checked at http://127.0.0.1:8000/health/db. It shows `{"status": "ok"}` when Postgres is reachable, and a 503 error when it is not.
 
 ## Web UI
 
