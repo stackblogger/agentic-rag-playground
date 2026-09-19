@@ -45,6 +45,41 @@
   background: var(--tblr-bg-surface-secondary);
 }
 
-.chat-answer {
-  white-space: pre-wrap;
+.chat-answer > :last-child {
+  margin-bottom: 0;
+}
+
+.chat-answer ul,
+.chat-answer ol {
+  padding-left: 1.25rem;
+}
+
+.chat-answer pre {
+  padding: 0.6rem 0.8rem;
+  border-radius: 0.5rem;
+  background: var(--tblr-bg-surface-dark, #1d273b);
+  color: #e6e9ef;
+  overflow-x: auto;
+}
+
+.chat-answer code {
+  font-size: 0.85em;
+}
+
+.chat-answer :not(pre) > code {
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.25rem;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.chat-answer table {
+  width: 100%;
+  margin-bottom: 0.75rem;
+  border-collapse: collapse;
+}
+
+.chat-answer th,
+.chat-answer td {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
 }

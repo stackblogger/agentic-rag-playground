@@ -18,6 +18,7 @@ This repo is for learning and experimenting. Devs can clone it, play with it, br
 - pypdf (to extract text from PDF files)
 - FastAPI (for the API)
 - Tabler (Bootstrap based UI template, loaded from a CDN) with plain JavaScript, no build step
+- marked and DOMPurify (loaded from a CDN) to show the chat answers as formatted text
 - SQLAlchemy (ORM) and Alembic (database migrations)
 - Docker Compose (to run Postgres locally)
 
@@ -99,10 +100,10 @@ The web UI is at http://127.0.0.1:8000. It uses the same API routes that are lis
 
 - **Documents**: upload a PDF, see all uploaded documents with their pages, chunks, size and status, and delete a document.
 - **Search**: type a query and see the chunks with the closest meaning, with file name, page number and score. The number of results can be 3, 5, 10 or 20.
-- **Chat**: ask questions and get answers made from the documents, with the sources (file name and page) shown under each answer. The number of chunks used from each search can be 3, 5 or 10. Each question is answered on its own, earlier questions are not remembered.
+- **Chat**: ask questions and get answers made from the documents, with the sources (file name and page) shown under each answer. The answers are shown as formatted text (lists, bold text, tables, code blocks and links). The HTML is cleaned before it is shown, and images are not allowed. The number of chunks used from each search can be 3, 5 or 10. Each question is answered on its own, earlier questions are not remembered.
 - **Status**: shows if the API and the database are working.
 
-The UI files are in `src/agentic_rag/ui/`. They are plain HTML, CSS and JavaScript, so no build step is needed. The Tabler template and its icons are loaded from a CDN, so internet is needed to open the UI.
+The UI files are in `src/agentic_rag/ui/`. They are plain HTML, CSS and JavaScript, so no build step is needed. The Tabler template, its icons, and the libraries for formatting answers are loaded from a CDN, so internet is needed to open the UI. Without them, the chat answers are shown as plain text.
 
 ## How to use
 

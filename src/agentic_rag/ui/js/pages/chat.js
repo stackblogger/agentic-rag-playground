@@ -1,4 +1,5 @@
 import { api } from "../api.js";
+import { renderMarkdown } from "../markdown.js";
 import { showToast } from "../toast.js";
 
 export const title = "Chat";
@@ -120,7 +121,7 @@ function answerMessage(result) {
 
   const answer = document.createElement("div");
   answer.className = "chat-answer";
-  answer.textContent = result.answer;
+  renderMarkdown(answer, result.answer);
   bubble.append(answer);
 
   const seen = new Set();
