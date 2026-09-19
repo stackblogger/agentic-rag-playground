@@ -22,3 +22,4 @@ Follow the code layers from `docs/architecture.md`. Routes in `api/` stay thin, 
 - If a change makes the README or a doc wrong, update it in the same change.
 - The README must always look complete. No "coming soon" or future plans, no table or column lists (they are in `docs/database.md`), and no "you" or "your".
 - Write code comments, docs and messages in simple, human. No fancy words.
+- For logs, use `logging.getLogger(__name__)`. Never log secrets, API keys or the text of documents.
