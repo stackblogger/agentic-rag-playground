@@ -59,6 +59,8 @@ Open http://127.0.0.1:8000. Port 8000 is used, so the app container must not be 
 - **Chat**: ask questions and get answers from the documents, with sources.
 - **Status**: check if the API and the database are working.
 
+![Demo of the web UI: asking questions in Chat](docs/agentic-rag.gif)
+
 ![Documents page of the web UI](docs/agentic-rag-documents-ui.png)
 
 ![Chat page of the web UI](docs/agentic-rag-chat-ui.png)
