@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Virtual environments
+.venv/
+venv/
+
+# Env files (keep secrets out of git)
+.env
+.env.*
+!.env.example
+
+# Uploaded files (keep the folder, ignore the files)
+data/uploads/*
+!data/uploads/.gitkeep
+
+# Tests and tools
+.pytest_cache/
+.coverage
+.mypy_cache/
+.ruff_cache/
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
