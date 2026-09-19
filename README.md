@@ -104,6 +104,7 @@ Unit tests need nothing. Integration tests need Postgres running (`docker compos
 
 ## Docs
 
+- [Website](https://stackblogger.github.io/agentic-rag-playground/): the same docs with a demo, built from the `docs/` folder and deployed by GitHub Actions.
 - [Architecture](docs/architecture.md): how the app is built and how upload, search and chat work.
 - [API](docs/api.md): all routes with examples and error codes.
 - [Database](docs/database.md): tables, embedding size and migration commands.

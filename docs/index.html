@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agentic RAG Playground</title>
+    <meta
+      name="description"
+      content="A simple open source playground to try Agentic RAG. Upload PDFs, then search inside them or chat with them."
+    />
+    <meta property="og:title" content="Agentic RAG Playground" />
+    <meta property="og:description" content="Upload PDFs, then search inside them or chat with them. The LLM decides what to search." />
+    <meta property="og:image" content="agentic-rag-architecture.png" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/styles/github-dark.min.css" />
+    <link rel="stylesheet" href="assets/site.css" />
+    <script>
+      // set the theme before the page is drawn, so there is no flash
+      try {
+        const saved = localStorage.getItem("theme");
+        const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        document.documentElement.dataset.theme = saved || (dark ? "dark" : "light");
+      } catch (error) {
+        document.documentElement.dataset.theme = "light";
+      }
+    </script>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <a class="brand" href="#top"><span class="brand-mark">🧠</span>Agentic RAG Playground</a>
+        <nav class="nav" id="nav">
+          <a href="#features">Features</a>
+          <a href="#how-it-works">How it works</a>
+          <a href="#architecture">Architecture</a>
+          <a href="#quick-start">Quick start</a>
+          <a href="#docs">Docs</a>
+        </nav>
+        <div class="header-actions">
+          <button class="icon-button" id="theme" title="Change theme" aria-label="Change theme">🌓</button>
+          <a class="button" href="https://github.com/stackblogger/agentic-rag-playground" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="container">
+          <span class="pill">Open source · MIT license</span>
+          <h1>Try <span class="gradient-text">Agentic RAG</span> on your own documents</h1>
+          <p class="lead">
+            Upload PDFs, then search inside them or chat with them. The LLM decides by itself what to search, and shows the
+            sources with every answer.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#quick-start">Get started</a>
+            <a class="button" href="https://github.com/stackblogger/agentic-rag-playground" target="_blank" rel="noopener">View on GitHub</a>
+          </div>
+          <div class="badges">
+            <a href="https://github.com/stackblogger/agentic-rag-playground/actions/workflows/tests.yml" target="_blank" rel="noopener">
+              <img src="https://github.com/stackblogger/agentic-rag-playground/actions/workflows/tests.yml/badge.svg" alt="Tests" />
+            </a>
+            <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT" />
+            <img src="https://img.shields.io/badge/python-3.11+-3776ab.svg" alt="Python 3.11+" />
+          </div>
+
+          <div class="window">
+            <div class="window-bar"><span></span><span></span><span></span><small>127.0.0.1:8000</small></div>
+            <img src="agentic-rag.gif" alt="Demo of the web UI: asking questions in Chat" />
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="soft">
+        <div class="container">
+          <div class="section-head">
+            <h2>What it does</h2>
+            <p>A small but complete app, made for learning. Clone it, play with it, break it and improve it.</p>
+          </div>
+          <div class="grid four">
+            <div class="card hover">
+              <div class="icon">📄</div>
+              <h3>Upload PDFs</h3>
+              <p>Text is read page by page and cut into chunks. Each chunk keeps its page number.</p>
+            </div>
+            <div class="card hover">
+              <div class="icon">🔎</div>
+              <h3>Search by meaning</h3>
+              <p>Embeddings and pgvector find the closest chunks, even when the words are different.</p>
+            </div>
+            <div class="card hover">
+              <div class="icon">🤖</div>
+              <h3>Agentic chat</h3>
+              <p>The LLM has a search tool. It searches again with new words if the first results are weak.</p>
+            </div>
+            <div class="card hover">
+              <div class="icon">🐳</div>
+              <h3>One command</h3>
+              <p>Docker Compose starts the app and Postgres, and runs the migrations for you.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="how-it-works">
+        <div class="container">
+          <div class="section-head">
+            <h2>How it works</h2>
+            <p>Three flows, and each one is simple.</p>
+          </div>
+          <div class="grid three">
+            <div class="card">
+              <h3>Upload</h3>
+              <ol class="steps">
+                <li>The PDF is saved and pypdf reads the text</li>
+                <li>Text is cut into chunks, page by page</li>
+                <li>LiteLLM makes an embedding for each chunk</li>
+                <li>Document and chunks are saved in Postgres</li>
+              </ol>
+            </div>
+            <div class="card">
+              <h3>Search</h3>
+              <ol class="steps">
+                <li>The query is converted to an embedding</li>
+                <li>pgvector finds the nearest chunks</li>
+                <li>Chunks come back with file, page and score</li>
+              </ol>
+            </div>
+            <div class="card">
+              <h3>Chat</h3>
+              <ol class="steps">
+                <li>The agent asks the LLM, with a search tool</li>
+                <li>The LLM searches, again if needed</li>
+                <li>It answers only from the found chunks</li>
+                <li>The answer comes back with its sources</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="architecture" class="soft">
+        <div class="container">
+          <div class="section-head">
+            <h2>Architecture</h2>
+            <p>The web UI, the API, the database and the LLM provider, in one picture.</p>
+          </div>
+          <div class="figure">
+            <a href="agentic-rag-architecture.png" target="_blank" rel="noopener" title="Open full size">
+              <img src="agentic-rag-architecture.png" alt="Architecture of Agentic RAG Playground" loading="lazy" />
+            </a>
+          </div>
+          <p class="figure-caption">Click the picture to open it full size. Read more in the <a href="#docs" data-doc="architecture">architecture doc</a> below.</p>
+        </div>
+      </section>
+
+      <section id="quick-start">
+        <div class="container">
+          <div class="section-head">
+            <h2>Quick start</h2>
+            <p>Docker and an OpenAI API key are all that is needed.</p>
+          </div>
+          <div style="text-align: center">
+            <div class="tabs" id="start-tabs">
+              <button class="tab active" data-target="start-docker">With Docker</button>
+              <button class="tab" data-target="start-local">Without Docker for the app</button>
+            </div>
+          </div>
+
+          <div class="code" id="start-docker">
+            <button class="copy">Copy</button>
+<pre><code class="language-bash">git clone https://github.com/stackblogger/agentic-rag-playground.git
+cd agentic-rag-playground
+cp .env.example .env        # set OPENAI_API_KEY in it
+docker compose up -d --build</code></pre>
+          </div>
+          <div class="code hidden" id="start-local">
+            <button class="copy">Copy</button>
+<pre><code class="language-bash">python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env        # set OPENAI_API_KEY in it
+docker compose up -d db     # Postgres with pgvector
+alembic upgrade head        # create the tables
+uvicorn agentic_rag.api.main:app --app-dir src --reload</code></pre>
+          </div>
+          <p class="hint" style="text-align: center">Then open <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> for the web UI.</p>
+        </div>
+      </section>
+
+      <section id="stack" class="soft">
+        <div class="container">
+          <div class="section-head">
+            <h2>Built with</h2>
+          </div>
+          <div class="chips">
+            <span class="chip">Python 3.11</span>
+            <span class="chip">FastAPI</span>
+            <span class="chip">PostgreSQL + pgvector</span>
+            <span class="chip">SQLAlchemy</span>
+            <span class="chip">Alembic</span>
+            <span class="chip">LiteLLM</span>
+            <span class="chip">pypdf</span>
+            <span class="chip">Docker Compose</span>
+            <span class="chip">Tabler UI</span>
+            <span class="chip">pytest</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="docs">
+        <div class="container">
+          <div class="section-head">
+            <h2>Docs</h2>
+            <p>The same docs that are in the repo, shown here.</p>
+          </div>
+          <div class="docs-shell">
+            <div class="docs-tabs" id="doc-tabs">
+              <button class="tab active" data-doc="architecture">Architecture</button>
+              <button class="tab" data-doc="api">API</button>
+              <button class="tab" data-doc="database">Database</button>
+            </div>
+            <article class="md" id="doc"><div class="md-message">Loading...</div></article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <span>MIT License · Made for learning Agentic RAG</span>
+        <span class="footer-links">
+          <a href="https://github.com/stackblogger/agentic-rag-playground" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/stackblogger/agentic-rag-playground/blob/main/LICENSE" target="_blank" rel="noopener">License</a>
+        </span>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked@18.0.13/lib/marked.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.4.15/dist/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/highlight.min.js"></script>
+    <script src="assets/site.js"></script>
+  </body>
+</html>
