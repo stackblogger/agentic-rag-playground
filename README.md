@@ -266,6 +266,8 @@ The app runs on the local machine and Postgres runs inside Docker, so the host i
 ## More docs
 
 - [Architecture](docs/architecture.md): how the app is built and how upload, search and chat work inside.
+- [API](docs/api.md): all routes with examples, responses and error codes.
+- [Database](docs/database.md): tables, columns, embedding size and migration commands.
 
 ## Contributing
 
