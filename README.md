@@ -41,6 +41,31 @@ agentic-rag-playground/
 └── docker/           # Docker related files
 ```
 
+## How to run
+
+1. Clone the repo
+
+   ```bash
+   git clone https://github.com/stackblogger/agentic-rag-playground.git
+   cd agentic-rag-playground
+   ```
+
+2. Make a virtual environment and install packages
+
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   ```
+
+3. Start the app
+
+   ```bash
+   uvicorn agentic_rag.api.main:app --app-dir src --reload
+   ```
+
+4. Check that it is running. Open http://127.0.0.1:8000/health and you should see `{"status": "ok"}`. API docs are at http://127.0.0.1:8000/docs.
+
 ## Contributing
 
 Please keep changes small, one thing at a time, so commit history stays easy to read. Open an issue first if you want to do something big.
