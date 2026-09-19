@@ -1,8 +1,10 @@
 import * as documents from "./pages/documents.js";
+import * as search from "./pages/search.js";
 import * as status from "./pages/status.js";
 
 const pages = {
   documents: { ...documents, label: "Documents", icon: "ti-files" },
+  search: { ...search, label: "Search", icon: "ti-search" },
   status: { ...status, label: "Status", icon: "ti-heartbeat" },
 };
 
