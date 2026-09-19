@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -8,7 +9,11 @@ from sqlalchemy.orm import Session
 from agentic_rag.api.chat import router as chat_router
 from agentic_rag.api.documents import router as documents_router
 from agentic_rag.api.search import router as search_router
+from agentic_rag.core.logging import setup_logging
 from agentic_rag.db.connection import get_db
+
+setup_logging()
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Agentic RAG Playground")
 app.include_router(documents_router)
@@ -26,6 +31,7 @@ def health_db(db: Session = Depends(get_db)):
     try:
         db.execute(text("SELECT 1"))
     except Exception:
+        logger.exception("Database health check failed")
         raise HTTPException(status_code=503, detail="Database is not reachable")
     return {"status": "ok"}
 

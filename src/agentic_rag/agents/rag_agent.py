@@ -1,4 +1,5 @@
 import json
+import logging
 
 from sqlalchemy.orm import Session
 
@@ -6,6 +7,8 @@ from agentic_rag.core.config import settings
 from agentic_rag.llm.chat import chat_completion
 from agentic_rag.services.errors import LLMError
 from agentic_rag.services.search import search_documents
+
+logger = logging.getLogger(__name__)
 
 SYSTEM_PROMPT = (
     "You answer questions about the documents that the user uploaded. "
@@ -33,6 +36,7 @@ def ask_llm(messages: list[dict], tools: list[dict] | None = None):
     try:
         return chat_completion(messages, tools)
     except Exception:
+        logger.exception("The LLM call failed")
         raise LLMError("Could not get an answer from the LLM")
 
 
@@ -40,11 +44,16 @@ def run_search_tool(db: Session, arguments: str, limit: int, sources: list[dict]
     try:
         query = json.loads(arguments)["query"]
     except (ValueError, KeyError, TypeError):
+        logger.warning("The LLM gave wrong arguments for the search tool")
+        logger.debug("Arguments were: %s", arguments)
         return "Invalid arguments. A query is needed."
 
+    logger.debug("Search query from the LLM: %s", query)
     known = {source["chunk_id"]: source["number"] for source in sources}
     lines = []
-    for result in search_documents(db, query, limit):
+    results = search_documents(db, query, limit)
+    logger.info("Search tool found %d chunks", len(results))
+    for result in results:
         number = known.get(result["chunk_id"])
         if number is None:
             number = len(sources) + 1
@@ -68,11 +77,14 @@ def run_agent(db: Session, question: str, limit: int) -> dict:
         {"role": "user", "content": question},
     ]
     sources: list[dict] = []
+    logger.info("Agent started: question_length=%d, limit=%d, max_steps=%d", len(question), limit, settings.agent_max_steps)
 
-    for _ in range(settings.agent_max_steps):
+    for step in range(1, settings.agent_max_steps + 1):
         message = ask_llm(messages, tools=[SEARCH_TOOL])
         if not message.tool_calls:
+            logger.info("Agent finished after %d step(s) with %d source(s)", step, len(sources))
             return {"answer": message.content, "sources": sources}
+        logger.info("Agent step %d: the LLM wants to search (%d call(s))", step, len(message.tool_calls))
 
         messages.append(
             {
@@ -92,9 +104,11 @@ def run_agent(db: Session, question: str, limit: int) -> dict:
             if call.function.name == "search_documents":
                 content = run_search_tool(db, call.function.arguments, limit, sources)
             else:
+                logger.warning("The LLM asked for an unknown tool: %s", call.function.name)
                 content = "Unknown tool."
             messages.append({"role": "tool", "tool_call_id": call.id, "content": content})
 
     # searched enough, ask for the final answer without the tool
+    logger.info("Agent reached the limit of %d searches, asking for the final answer", settings.agent_max_steps)
     message = ask_llm(messages)
     return {"answer": message.content, "sources": sources}
