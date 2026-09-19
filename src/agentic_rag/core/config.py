@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     upload_dir: str = "data/uploads"
     llm_model: str = "gpt-4o-mini"
     embedding_model: str = "text-embedding-3-small"
+    chunk_size: int = 1000
+    chunk_overlap: int = 200
 
 
 settings = Settings()

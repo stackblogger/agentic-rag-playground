@@ -98,12 +98,13 @@ agentic-rag-playground/
 curl -X POST http://127.0.0.1:8000/documents -F "file=@/path/to/file.pdf"
 ```
 
-The file is saved in `UPLOAD_DIR` and the text is extracted page by page with pypdf. The text is saved in the database. The response looks like this:
+The file is saved in `UPLOAD_DIR` and the text is extracted page by page with pypdf. The text is saved in the database, and then cut into small chunks for search. The response looks like this:
 
 ```json
-{"id": 1, "filename": "file.pdf", "page_count": 12, "status": "processed"}
+{"id": 1, "filename": "file.pdf", "page_count": 12, "chunk_count": 34, "status": "processed"}
 ```
 
+- Chunks are cut page by page, so a chunk never goes across two pages. Each chunk keeps its page number. Chunks next to each other share some text (`CHUNK_OVERLAP`), so a sentence at the edge is not lost. Words are not cut in the middle when possible.
 - Only `.pdf` files are allowed. Other files get a 400 error.
 - If pypdf cannot read the file, the response is a 422 error and the document is saved with status `failed`.
 - PDFs that are only scanned images have no text to extract, so the saved text will be empty.
@@ -135,6 +136,8 @@ All settings are read from environment variables or the `.env` file (see `.env.e
 | `UPLOAD_DIR` | Folder where uploaded files are kept | `data/uploads` |
 | `LLM_MODEL` | Model name used for chat (any LiteLLM model) | `gpt-4o-mini` |
 | `EMBEDDING_MODEL` | Model name used for embeddings | `text-embedding-3-small` |
+| `CHUNK_SIZE` | Maximum number of characters in one chunk | `1000` |
+| `CHUNK_OVERLAP` | Number of characters shared between two chunks next to each other | `200` |
 
 The app runs on the local machine and Postgres runs inside Docker, so the host in `DATABASE_URL` must be `localhost`. The container name `agentic-rag-db` only works from another container in the same Docker network.
 

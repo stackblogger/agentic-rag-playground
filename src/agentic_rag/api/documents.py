@@ -7,7 +7,8 @@ from sqlalchemy.orm import Session
 
 from agentic_rag.core.config import settings
 from agentic_rag.db.connection import get_db
-from agentic_rag.db.models import Document
+from agentic_rag.db.models import Chunk, Document
+from agentic_rag.ingestion.chunking import chunk_text
 from agentic_rag.ingestion.pdf import extract_pages
 
 router = APIRouter(prefix="/documents", tags=["documents"])
@@ -44,6 +45,20 @@ def upload_document(file: UploadFile, db: Session = Depends(get_db)):
     document.extracted_text = "\n\n".join(pages)
     document.status = "processed"
     db.add(document)
+    db.flush()
+
+    chunk_count = 0
+    for page_number, page_text in enumerate(pages, start=1):
+        for piece in chunk_text(page_text, settings.chunk_size, settings.chunk_overlap):
+            db.add(
+                Chunk(
+                    document_id=document.id,
+                    chunk_index=chunk_count,
+                    page_number=page_number,
+                    content=piece,
+                )
+            )
+            chunk_count += 1
     db.commit()
     db.refresh(document)
 
@@ -51,5 +66,6 @@ def upload_document(file: UploadFile, db: Session = Depends(get_db)):
         "id": document.id,
         "filename": document.filename,
         "page_count": document.page_count,
+        "chunk_count": chunk_count,
         "status": document.status,
     }
