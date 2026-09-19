@@ -1,4 +1,5 @@
 import json
+import logging
 from types import SimpleNamespace
 
 import pytest
@@ -75,3 +76,13 @@ def test_llm_failure_raises_llm_error(monkeypatch):
     monkeypatch.setattr(rag_agent, "chat_completion", broken)
     with pytest.raises(LLMError):
         rag_agent.run_agent(None, "x", 5)
+
+
+def test_agent_logs_its_steps(monkeypatch, caplog):
+    use_fakes(monkeypatch, [search("a", "cats"), answer("done")], {"cats": [found(10)]})
+
+    with caplog.at_level(logging.INFO, logger="agentic_rag"):
+        rag_agent.run_agent(None, "cats?", 5)
+
+    assert "Agent step 1" in caplog.text
+    assert "Agent finished after 2 step(s) with 1 source(s)" in caplog.text
