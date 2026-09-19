@@ -1,5 +1,8 @@
 # Agentic RAG Playground
 
+[![Tests](https://github.com/stackblogger/agentic-rag-playground/actions/workflows/tests.yml/badge.svg)](https://github.com/stackblogger/agentic-rag-playground/actions/workflows/tests.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A simple playground for developers to try Agentic RAG. Upload documents, then chat with them or search inside them.
 
 ## What is this?
@@ -108,3 +111,7 @@ Unit tests need nothing. Integration tests need Postgres running (`docker compos
 ## Contributing
 
 Please keep changes small, one thing at a time, so commit history stays easy to read. Open an issue first if the change is big.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
