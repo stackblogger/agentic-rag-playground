@@ -263,6 +263,10 @@ All settings are read from environment variables or the `.env` file (see `.env.e
 
 The app runs on the local machine and Postgres runs inside Docker, so the host in `DATABASE_URL` must be `localhost`. The container name `agentic-rag-db` only works from another container in the same Docker network.
 
+## More docs
+
+- [Architecture](docs/architecture.md): how the app is built and how upload, search and chat work inside.
+
 ## Contributing
 
 Please keep changes small, one thing at a time, so commit history stays easy to read. Open an issue first if the change is big.
