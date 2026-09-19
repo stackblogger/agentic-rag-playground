@@ -31,7 +31,7 @@ agentic-rag-playground/
 │   ├── db/           # database connection and models (SQLAlchemy)
 │   ├── ingestion/    # read file, extract text, make chunks
 │   ├── retrieval/    # database queries for search
-│   ├── agents/       # agent logic, decides what to search and when
+│   ├── agents/       # chat agent, decides what to search and when
 │   └── llm/          # LiteLLM wrapper
 ├── migrations/       # Alembic migration files
 ├── alembic.ini       # Alembic config
@@ -144,19 +144,21 @@ curl -X POST http://127.0.0.1:8000/chat \
   -d '{"question": "How long do cats sleep in a day?", "limit": 5}'
 ```
 
-The question is searched in the documents first. The best chunks are then given to the LLM (`LLM_MODEL`) as context, and it answers only from them. `limit` is how many chunks are given as context. It is 5 by default and can be from 1 to 10. The response looks like this:
+The LLM (`LLM_MODEL`) works as an agent here. It has a search tool for the documents and decides by itself what to search. If the first results are not enough, it searches again with different words, and then it answers only from what it found. `limit` is how many chunks each search gives back. It is 5 by default and can be from 1 to 10. The response looks like this:
 
 ```json
 {
-  "answer": "Cats sleep about 12 to 16 hours in a day [1].",
+  "answer": "Cats sleep about 12 to 16 hours in a day.",
   "sources": [
     {"number": 1, "chunk_id": 26, "document_id": 16, "filename": "file.pdf", "page_number": 1}
   ]
 }
 ```
 
-- The numbers in the answer, like `[1]`, match the `number` in `sources`.
-- If nothing is found in the documents, the answer says so and the LLM is not called.
+- `sources` lists the chunks the agent found while searching, numbered in the order it found them.
+- The agent searches at most `AGENT_MAX_STEPS` times. After that it has to answer with what it has.
+- If nothing is found in the documents, the answer says so and `sources` is empty.
+- The model in `LLM_MODEL` must support tool calling. OpenAI chat models do.
 - An empty question gives a 422 error. If the embedding or the LLM call fails, the response is a 502 error.
 
 ## Database migrations
@@ -187,6 +189,7 @@ All settings are read from environment variables or the `.env` file (see `.env.e
 | `OPENAI_API_KEY` | API key for OpenAI, read by LiteLLM | empty |
 | `CHUNK_SIZE` | Maximum number of characters in one chunk | `1000` |
 | `CHUNK_OVERLAP` | Number of characters shared between two chunks next to each other | `200` |
+| `AGENT_MAX_STEPS` | Maximum number of times the chat agent can search before it must answer | `3` |
 
 The app runs on the local machine and Postgres runs inside Docker, so the host in `DATABASE_URL` must be `localhost`. The container name `agentic-rag-db` only works from another container in the same Docker network.
 

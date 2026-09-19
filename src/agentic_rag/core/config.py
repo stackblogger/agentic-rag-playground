@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     embedding_model: str = "text-embedding-3-small"
     chunk_size: int = 1000
     chunk_overlap: int = 200
+    agent_max_steps: int = 3
 
 
 settings = Settings()
