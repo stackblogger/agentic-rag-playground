@@ -44,7 +44,7 @@ agentic-rag-playground/
 ├── .cursor/rules/    # rules for Cursor (read the docs first)
 ├── tests/
 │   ├── unit/         # small tests, no database or API key needed
-│   └── integration/  # tests that need DB / API
+│   └── integration/  # tests that call the API routes with a separate test database
 ├── docs/             # extra notes and design docs
 ├── data/uploads/     # uploaded files are kept here
 └── docker/           # Docker related files (start script of the app container)
@@ -271,7 +271,12 @@ pip install -r requirements-dev.txt
 pytest
 ```
 
-The tests in `tests/unit/` do not need Postgres or an OpenAI key. The LLM and embedding calls are replaced with fake ones, and any real call fails the test.
+The tests in `tests/unit/` do not need Postgres or an OpenAI key.
+
+The tests in `tests/integration/` call the API routes of search and chat with a real Postgres. Postgres must be running, for example with `docker compose up -d db`. If it is not running, these tests are skipped.
+
+- The tests make their own database, named like the app database with `_test` at the end (`agentic_rag_test`). The real migrations run on it, and it is dropped when the tests finish, so the real data is never touched.
+- The LLM and embedding calls are replaced with fake ones, and any real call fails the test.
 
 ## More docs
 
