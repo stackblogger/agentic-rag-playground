@@ -90,6 +90,26 @@ agentic-rag-playground/
 
 8. Check the database connection. Open http://127.0.0.1:8000/health/db. It shows `{"status": "ok"}` when Postgres is reachable, and a 503 error when it is not.
 
+## How to use
+
+### Upload a PDF
+
+```bash
+curl -X POST http://127.0.0.1:8000/documents -F "file=@/path/to/file.pdf"
+```
+
+The file is saved in `UPLOAD_DIR` and the text is extracted page by page with pypdf. The text is saved in the database. The response looks like this:
+
+```json
+{"id": 1, "filename": "file.pdf", "page_count": 12, "status": "processed"}
+```
+
+- Only `.pdf` files are allowed. Other files get a 400 error.
+- If pypdf cannot read the file, the response is a 422 error and the document is saved with status `failed`.
+- PDFs that are only scanned images have no text to extract, so the saved text will be empty.
+
+The upload can also be tried from the API docs page at http://127.0.0.1:8000/docs.
+
 ## Database migrations
 
 Tables are managed with Alembic. Migration files are in `migrations/versions/`. The database URL is taken from `DATABASE_URL` in the settings, not from `alembic.ini`.
