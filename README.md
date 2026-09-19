@@ -58,13 +58,40 @@ agentic-rag-playground/
    pip install -r requirements.txt
    ```
 
-3. Start the app
+3. Copy the env file. The defaults work for local run, change the values if you need.
+
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Start Postgres (with pgvector) in Docker. The container name is `agentic-rag-db`.
+
+   ```bash
+   docker compose up -d
+   ```
+
+   The db user, password and name are `postgres`, `postgres` and `agentic_rag`, same as the default `DATABASE_URL`. Data is kept in a Docker volume, so it stays even if you restart the container.
+
+5. Start the app
 
    ```bash
    uvicorn agentic_rag.api.main:app --app-dir src --reload
    ```
 
-4. Check that it is running. Open http://127.0.0.1:8000/health and you should see `{"status": "ok"}`. API docs are at http://127.0.0.1:8000/docs.
+6. Check that it is running. Open http://127.0.0.1:8000/health and you should see `{"status": "ok"}`. API docs are at http://127.0.0.1:8000/docs.
+
+## Settings
+
+All settings are read from environment variables or the `.env` file (see `.env.example`).
+
+| Name | What it is | Default |
+| --- | --- | --- |
+| `DATABASE_URL` | Postgres connection string | `postgresql://postgres:postgres@localhost:5432/agentic_rag` |
+| `UPLOAD_DIR` | Folder where uploaded files are kept | `data/uploads` |
+| `LLM_MODEL` | Model name used for chat (any LiteLLM model) | `gpt-4o-mini` |
+| `EMBEDDING_MODEL` | Model name used for embeddings | `text-embedding-3-small` |
+
+The app runs on your machine and Postgres runs inside Docker, so the host in `DATABASE_URL` must be `localhost`. The container name `agentic-rag-db` only works from another container in the same Docker network.
 
 ## Contributing
 
