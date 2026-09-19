@@ -40,6 +40,8 @@ agentic-rag-playground/
 ├── alembic.ini       # Alembic config
 ├── Dockerfile        # image of the app
 ├── docker-compose.yml # app and Postgres containers
+├── CLAUDE.md         # rules for Claude Code (read the docs first)
+├── .cursor/rules/    # rules for Cursor (read the docs first)
 ├── tests/
 │   ├── unit/         # small tests
 │   └── integration/  # tests that need DB / API
