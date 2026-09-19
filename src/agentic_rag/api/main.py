@@ -1,4 +1,7 @@
+from pathlib import Path
+
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -25,3 +28,7 @@ def health_db(db: Session = Depends(get_db)):
     except Exception:
         raise HTTPException(status_code=503, detail="Database is not reachable")
     return {"status": "ok"}
+
+
+# keep this last, so the API routes above are matched first
+app.mount("/", StaticFiles(directory=Path(__file__).resolve().parent.parent / "ui", html=True), name="ui")

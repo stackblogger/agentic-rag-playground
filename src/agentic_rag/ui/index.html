@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agentic RAG Playground</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/css/tabler.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.34.0/dist/tabler-icons.min.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="navbar navbar-expand-md d-print-none">
+        <div class="container-xl">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <a href="#/status" class="navbar-brand navbar-brand-autodark">
+            <i class="ti ti-brain me-2 fs-2"></i>Agentic RAG Playground
+          </a>
+          <div class="collapse navbar-collapse" id="navbar-menu">
+            <ul class="navbar-nav" id="nav"></ul>
+          </div>
+          <div class="navbar-nav flex-row">
+            <a href="/docs" target="_blank" class="nav-link" title="API docs">
+              <i class="ti ti-api me-1"></i>API docs
+            </a>
+          </div>
+        </div>
+      </header>
+      <div class="page-wrapper">
+        <div class="page-header d-print-none">
+          <div class="container-xl">
+            <h2 class="page-title" id="page-title"></h2>
+          </div>
+        </div>
+        <div class="page-body">
+          <div class="container-xl" id="page"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toasts"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.4.0/dist/js/tabler.min.js"></script>
+    <script type="module" src="/js/app.js"></script>
+  </body>
+</html>

@@ -17,6 +17,7 @@ This repo is for learning and experimenting. Devs can clone it, play with it, br
 - LiteLLM (one interface for many LLM providers)
 - pypdf (to extract text from PDF files)
 - FastAPI (for the API)
+- Tabler (Bootstrap based UI template, loaded from a CDN) with plain JavaScript, no build step
 - SQLAlchemy (ORM) and Alembic (database migrations)
 - Docker Compose (to run Postgres locally)
 
@@ -32,7 +33,8 @@ agentic-rag-playground/
 │   ├── ingestion/    # read file, extract text, make chunks
 │   ├── retrieval/    # database queries for search
 │   ├── agents/       # chat agent, decides what to search and when
-│   └── llm/          # LiteLLM wrapper
+│   ├── llm/          # LiteLLM wrapper
+│   └── ui/           # web UI (plain HTML, CSS and JS, served by the app)
 ├── migrations/       # Alembic migration files
 ├── alembic.ini       # Alembic config
 ├── tests/
@@ -87,7 +89,7 @@ agentic-rag-playground/
    uvicorn agentic_rag.api.main:app --app-dir src --reload
    ```
 
-7. Check that it is running. Open http://127.0.0.1:8000/health and it should show `{"status": "ok"}`. API docs are at http://127.0.0.1:8000/docs.
+7. Open http://127.0.0.1:8000 for the web UI. The Status page shows if the API and the database are working. API docs are at http://127.0.0.1:8000/docs, and http://127.0.0.1:8000/health returns `{"status": "ok"}`.
 
 8. Check the database connection. Open http://127.0.0.1:8000/health/db. It shows `{"status": "ok"}` when Postgres is reachable, and a 503 error when it is not.
 

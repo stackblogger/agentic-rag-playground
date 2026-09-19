@@ -1,0 +1,7 @@
+.status-card .status-icon {
+  font-size: 2rem;
+}
+
+.toast-container {
+  z-index: 1080;
+}
