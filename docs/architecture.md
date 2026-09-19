@@ -21,7 +21,7 @@ Code is in `src/agentic_rag/`. A layer only calls the layers below it.
 - `retrieval/`: the vector search query.
 - `llm/`: LiteLLM calls (embeddings and chat).
 - `db/`: connection and models.
-- `core/`: settings.
+- `core/`: settings and logging setup.
 
 Services raise their own errors, and the routes change them into HTTP codes (400, 404, 422, 502).
 

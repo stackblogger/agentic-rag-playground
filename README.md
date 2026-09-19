@@ -92,6 +92,7 @@ Settings are read from environment variables or the `.env` file (see `.env.examp
 | `CHUNK_SIZE` | Maximum characters in one chunk | `1000` |
 | `CHUNK_OVERLAP` | Characters shared by two chunks next to each other | `200` |
 | `AGENT_MAX_STEPS` | Maximum searches the chat agent can do before it must answer | `3` |
+| `LOG_LEVEL` | How much the app logs: `DEBUG`, `INFO`, `WARNING` or `ERROR` (`DEBUG` also shows search queries) | `INFO` |
 
 ## Run the tests
 

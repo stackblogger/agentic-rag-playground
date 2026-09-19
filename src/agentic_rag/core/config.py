@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     chunk_size: int = 1000
     chunk_overlap: int = 200
     agent_max_steps: int = 3
+    log_level: str = "INFO"
 
 
 settings = Settings()
