@@ -53,6 +53,7 @@ POST /chat -> agent asks the LLM
 
 - The LLM has a `search_documents` tool and decides by itself when to use it. It can search again with different words.
 - It can search at most `AGENT_MAX_STEPS` times, and then it must answer.
+- The model in `LLM_MODEL` must support tool calling. OpenAI chat models do.
 - Each question is answered on its own. Earlier questions are not remembered.
 
 ## Delete

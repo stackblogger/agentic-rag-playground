@@ -32,6 +32,8 @@ curl -X POST http://127.0.0.1:8000/documents -F "file=@/path/to/file.pdf"
 
 Errors: 400 if the file is not a PDF, 422 if the PDF cannot be read, 502 if the embeddings cannot be made.
 
+A PDF that has only scanned images has no text to read, so it gives 0 chunks.
+
 ## List documents
 
 ```bash
