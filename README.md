@@ -30,7 +30,7 @@ agentic-rag-playground/
 │   ├── services/     # main logic of each feature, used by the API routes
 │   ├── db/           # database connection and models (SQLAlchemy)
 │   ├── ingestion/    # read file, extract text, make chunks
-│   ├── retrieval/    # embeddings and search logic
+│   ├── retrieval/    # database queries for search
 │   ├── agents/       # agent logic, decides what to search and when
 │   └── llm/          # LiteLLM wrapper
 ├── migrations/       # Alembic migration files
@@ -112,6 +112,29 @@ The file is saved in `UPLOAD_DIR` and the text is extracted page by page with py
 - PDFs that are only scanned images have no text to extract, so the saved text will be empty.
 
 The upload can also be tried from the API docs page at http://127.0.0.1:8000/docs.
+
+### Search
+
+```bash
+curl "http://127.0.0.1:8000/search?query=capital%20call%20amount&limit=5"
+```
+
+The query is converted to an embedding with the same model, and the chunks with the closest meaning are returned, best match first. `limit` is how many chunks to return. It is 5 by default and can be from 1 to 20. Each result looks like this:
+
+```json
+{
+  "chunk_id": 26,
+  "document_id": 16,
+  "filename": "file.pdf",
+  "page_number": 1,
+  "content": "text of the chunk...",
+  "score": 0.83
+}
+```
+
+- `score` is cosine similarity. Higher is better, and 1 means the same meaning.
+- Chunks without an embedding are skipped.
+- An empty query gives a 422 error. If the embedding cannot be made, the response is a 502 error.
 
 ## Database migrations
 

@@ -10,6 +10,7 @@ from agentic_rag.db.models import Chunk, Document
 from agentic_rag.ingestion.chunking import chunk_text
 from agentic_rag.ingestion.pdf import extract_pages
 from agentic_rag.llm.embeddings import embed_texts
+from agentic_rag.services.errors import EmbeddingError
 
 
 class InvalidFileError(Exception):
@@ -17,10 +18,6 @@ class InvalidFileError(Exception):
 
 
 class PdfReadError(Exception):
-    pass
-
-
-class EmbeddingError(Exception):
     pass
 
 

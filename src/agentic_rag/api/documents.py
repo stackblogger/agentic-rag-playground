@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from agentic_rag.db.connection import get_db
 from agentic_rag.services import documents as document_service
+from agentic_rag.services.errors import EmbeddingError
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
@@ -17,7 +18,7 @@ def upload_document(file: UploadFile, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail=str(error))
     except document_service.PdfReadError as error:
         raise HTTPException(status_code=422, detail=str(error))
-    except document_service.EmbeddingError as error:
+    except EmbeddingError as error:
         raise HTTPException(status_code=502, detail=str(error))
 
     return {
