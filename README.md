@@ -17,6 +17,7 @@ This repo is for learning and experimenting. Devs can clone it, play with it, br
 - LiteLLM (one interface for many LLM providers)
 - pypdf (to extract text from PDF files)
 - FastAPI (for the API)
+- SQLAlchemy (ORM) and Alembic (database migrations)
 - Docker Compose (to run Postgres locally)
 
 ## Folder structure
@@ -26,12 +27,13 @@ agentic-rag-playground/
 ├── src/agentic_rag/
 │   ├── api/          # API routes (upload, search, chat)
 │   ├── core/         # config, settings, logging
-│   ├── db/           # database connection and models
+│   ├── db/           # database connection and models (SQLAlchemy)
 │   ├── ingestion/    # read file, extract text, make chunks
 │   ├── retrieval/    # embeddings and search logic
 │   ├── agents/       # agent logic, decides what to search and when
 │   └── llm/          # LiteLLM wrapper
-├── migrations/       # database migration files
+├── migrations/       # Alembic migration files
+├── alembic.ini       # Alembic config
 ├── tests/
 │   ├── unit/         # small tests
 │   └── integration/  # tests that need DB / API
@@ -72,15 +74,36 @@ agentic-rag-playground/
 
    The db user, password and name are `postgres`, `postgres` and `agentic_rag`, same as the default `DATABASE_URL`. Data is kept in a Docker volume, so it stays even if the container is restarted.
 
-5. Start the app
+5. Run the database migrations. This turns on the pgvector extension and creates the tables.
+
+   ```bash
+   alembic upgrade head
+   ```
+
+6. Start the app
 
    ```bash
    uvicorn agentic_rag.api.main:app --app-dir src --reload
    ```
 
-6. Check that it is running. Open http://127.0.0.1:8000/health and it should show `{"status": "ok"}`. API docs are at http://127.0.0.1:8000/docs.
+7. Check that it is running. Open http://127.0.0.1:8000/health and it should show `{"status": "ok"}`. API docs are at http://127.0.0.1:8000/docs.
 
-7. Check the database connection. Open http://127.0.0.1:8000/health/db. It shows `{"status": "ok"}` when Postgres is reachable, and a 503 error when it is not.
+8. Check the database connection. Open http://127.0.0.1:8000/health/db. It shows `{"status": "ok"}` when Postgres is reachable, and a 503 error when it is not.
+
+## Database migrations
+
+Tables are managed with Alembic. Migration files are in `migrations/versions/`. The database URL is taken from `DATABASE_URL` in the settings, not from `alembic.ini`.
+
+After changing a model in `src/agentic_rag/db/models.py`, make a new migration and apply it:
+
+```bash
+alembic revision --autogenerate -m "short message"
+alembic upgrade head
+```
+
+Always read the generated file before applying it. To undo the last migration, run `alembic downgrade -1`.
+
+Embeddings are stored with 1536 dimensions, which matches the default `EMBEDDING_MODEL` (`text-embedding-3-small`). If a model with a different size is used, change `EMBEDDING_DIMENSIONS` in `src/agentic_rag/db/models.py` and make a new migration.
 
 ## Settings
 
