@@ -1,10 +1,10 @@
 # Agentic RAG Playground
 
-A simple playground for developers to try Agentic RAG. You upload your documents, then you can chat with them or search inside them.
+A simple playground for developers to try Agentic RAG. Documents can be uploaded, and then devs can chat with them or search inside them.
 
 ## What is this?
 
-RAG means "Retrieval Augmented Generation". In simple words: we first find the useful parts from your documents, then we give those parts to the LLM so it can answer properly.
+RAG means "Retrieval Augmented Generation". In simple words: we first find the useful parts from the documents, then we give those parts to the LLM so it can answer properly.
 
 "Agentic" means the LLM is not just answering once. It can decide by itself what to do, like searching again with a better query if the first result is not good.
 
@@ -58,7 +58,7 @@ agentic-rag-playground/
    pip install -r requirements.txt
    ```
 
-3. Copy the env file. The defaults work for local run, change the values if you need.
+3. Copy the env file. The defaults work for local run, change the values if needed.
 
    ```bash
    cp .env.example .env
@@ -70,7 +70,7 @@ agentic-rag-playground/
    docker compose up -d
    ```
 
-   The db user, password and name are `postgres`, `postgres` and `agentic_rag`, same as the default `DATABASE_URL`. Data is kept in a Docker volume, so it stays even if you restart the container.
+   The db user, password and name are `postgres`, `postgres` and `agentic_rag`, same as the default `DATABASE_URL`. Data is kept in a Docker volume, so it stays even if the container is restarted.
 
 5. Start the app
 
@@ -78,7 +78,7 @@ agentic-rag-playground/
    uvicorn agentic_rag.api.main:app --app-dir src --reload
    ```
 
-6. Check that it is running. Open http://127.0.0.1:8000/health and you should see `{"status": "ok"}`. API docs are at http://127.0.0.1:8000/docs.
+6. Check that it is running. Open http://127.0.0.1:8000/health and it should show `{"status": "ok"}`. API docs are at http://127.0.0.1:8000/docs.
 
 ## Settings
 
@@ -91,8 +91,8 @@ All settings are read from environment variables or the `.env` file (see `.env.e
 | `LLM_MODEL` | Model name used for chat (any LiteLLM model) | `gpt-4o-mini` |
 | `EMBEDDING_MODEL` | Model name used for embeddings | `text-embedding-3-small` |
 
-The app runs on your machine and Postgres runs inside Docker, so the host in `DATABASE_URL` must be `localhost`. The container name `agentic-rag-db` only works from another container in the same Docker network.
+The app runs on the local machine and Postgres runs inside Docker, so the host in `DATABASE_URL` must be `localhost`. The container name `agentic-rag-db` only works from another container in the same Docker network.
 
 ## Contributing
 
-Please keep changes small, one thing at a time, so commit history stays easy to read. Open an issue first if you want to do something big.
+Please keep changes small, one thing at a time, so commit history stays easy to read. Open an issue first if the change is big.
