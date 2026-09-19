@@ -80,13 +80,15 @@ agentic-rag-playground/
 
 6. Check that it is running. Open http://127.0.0.1:8000/health and it should show `{"status": "ok"}`. API docs are at http://127.0.0.1:8000/docs.
 
+7. Check the database connection. Open http://127.0.0.1:8000/health/db. It shows `{"status": "ok"}` when Postgres is reachable, and a 503 error when it is not.
+
 ## Settings
 
 All settings are read from environment variables or the `.env` file (see `.env.example`).
 
 | Name | What it is | Default |
 | --- | --- | --- |
-| `DATABASE_URL` | Postgres connection string | `postgresql://postgres:postgres@localhost:5432/agentic_rag` |
+| `DATABASE_URL` | Postgres connection string | `postgresql+psycopg://postgres:postgres@localhost:5432/agentic_rag` |
 | `UPLOAD_DIR` | Folder where uploaded files are kept | `data/uploads` |
 | `LLM_MODEL` | Model name used for chat (any LiteLLM model) | `gpt-4o-mini` |
 | `EMBEDDING_MODEL` | Model name used for embeddings | `text-embedding-3-small` |
