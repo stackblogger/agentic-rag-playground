@@ -16,7 +16,6 @@ venv/
 
 # Uploaded files (keep the folder, ignore the files)
 data/uploads/*
-!data/uploads/.gitkeep
 
 # Tests and tools
 .pytest_cache/
