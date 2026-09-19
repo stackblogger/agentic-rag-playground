@@ -10,6 +10,12 @@ RAG means "Retrieval Augmented Generation". In simple words: we first find the u
 
 This repo is for learning and experimenting. Devs can clone it, play with it, break it, and improve it.
 
+## Architecture
+
+![Architecture of Agentic RAG Playground](docs/agentic-rag-architecture.png)
+
+More details are in [docs/architecture.md](docs/architecture.md).
+
 ## Tech stack
 
 - Python 3.11+
