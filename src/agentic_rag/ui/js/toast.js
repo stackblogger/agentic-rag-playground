@@ -1,6 +1,6 @@
 export function showToast(message, type = "success") {
   const toast = document.createElement("div");
-  toast.className = `toast align-items-center text-bg-${type} border-0`;
+  toast.className = `toast show align-items-center text-bg-${type} border-0`;
   toast.setAttribute("role", "alert");
 
   const row = document.createElement("div");
@@ -11,11 +11,10 @@ export function showToast(message, type = "success") {
   const close = document.createElement("button");
   close.type = "button";
   close.className = "btn-close btn-close-white me-2 m-auto";
-  close.setAttribute("data-bs-dismiss", "toast");
+  close.addEventListener("click", () => toast.remove());
   row.append(body, close);
   toast.append(row);
 
   document.getElementById("toasts").append(toast);
-  toast.addEventListener("hidden.bs.toast", () => toast.remove());
-  new bootstrap.Toast(toast, { delay: 4000 }).show();
+  setTimeout(() => toast.remove(), 4000);
 }

@@ -36,7 +36,7 @@ function statusCard({ name, path, icon }) {
           <div class="fw-bold">${name}</div>
           <div class="text-secondary small" data-message>Checking...</div>
         </div>
-        <span class="badge bg-secondary ms-auto" data-badge>...</span>
+        <span class="badge text-white bg-secondary ms-auto" data-badge>...</span>
       </div>
     </div>`;
 
@@ -44,12 +44,12 @@ function statusCard({ name, path, icon }) {
   const message = col.querySelector("[data-message]");
   api(path)
     .then(() => {
-      badge.className = "badge bg-success ms-auto";
+      badge.className = "badge text-white bg-success ms-auto";
       badge.textContent = "OK";
       message.textContent = "Working fine";
     })
     .catch((error) => {
-      badge.className = "badge bg-danger ms-auto";
+      badge.className = "badge text-white bg-danger ms-auto";
       badge.textContent = "Down";
       message.textContent = error.message;
     });

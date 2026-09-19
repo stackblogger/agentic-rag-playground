@@ -1,10 +1,12 @@
+import * as documents from "./pages/documents.js";
 import * as status from "./pages/status.js";
 
 const pages = {
+  documents: { ...documents, label: "Documents", icon: "ti-files" },
   status: { ...status, label: "Status", icon: "ti-heartbeat" },
 };
 
-const defaultPage = "status";
+const defaultPage = "documents";
 
 function currentPage() {
   const name = location.hash.replace("#/", "");
