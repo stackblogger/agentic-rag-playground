@@ -43,7 +43,7 @@ agentic-rag-playground/
 ├── CLAUDE.md         # rules for Claude Code (read the docs first)
 ├── .cursor/rules/    # rules for Cursor (read the docs first)
 ├── tests/
-│   ├── unit/         # small tests
+│   ├── unit/         # small tests, no database or API key needed
 │   └── integration/  # tests that need DB / API
 ├── docs/             # extra notes and design docs
 ├── data/uploads/     # uploaded files are kept here
@@ -263,6 +263,15 @@ All settings are read from environment variables or the `.env` file (see `.env.e
 | `AGENT_MAX_STEPS` | Maximum number of times the chat agent can search before it must answer | `3` |
 
 The app runs on the local machine and Postgres runs inside Docker, so the host in `DATABASE_URL` must be `localhost`. The container name `agentic-rag-db` only works from another container in the same Docker network.
+
+## Run the tests
+
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
+
+The tests in `tests/unit/` do not need Postgres or an OpenAI key. The LLM and embedding calls are replaced with fake ones, and any real call fails the test.
 
 ## More docs
 

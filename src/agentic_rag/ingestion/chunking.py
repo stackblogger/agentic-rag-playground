@@ -20,4 +20,10 @@ def chunk_text(text: str, size: int, overlap: int) -> list[str]:
             break
         start = max(end - overlap, start + 1)
 
+        # do not start the next chunk in the middle of a word
+        if text[start - 1] != " ":
+            next_space = text.find(" ", start, end)
+            if next_space != -1:
+                start = next_space + 1
+
     return chunks
