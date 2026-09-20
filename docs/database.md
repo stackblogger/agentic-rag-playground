@@ -34,6 +34,15 @@ Small pieces of a document's text. Search runs on this table.
 
 Deleting a document also deletes its chunks (`ON DELETE CASCADE`).
 
+## Index for search
+
+The `embedding` column has an HNSW index (`ix_chunks_embedding_hnsw`), so search does not read every chunk row. It jumps to the nearby vectors and checks only those. Points to keep in mind:
+
+- The index is built for cosine distance (`vector_cosine_ops`), because `retrieval/search.py` uses cosine. A different distance in the code will not use this index.
+- Search becomes approximate. Almost always it returns the same chunks as a full scan, but sometimes it can miss one.
+- Postgres uses the index only when the table is big enough. On a small table a full scan is cheaper, so the plan shows a sequential scan. That is fine.
+- `hnsw.ef_search` (default 40) decides how wide the search goes. A higher value gives better results and takes more time.
+
 ## Embedding size
 
 The `embedding` column has 1536 dimensions, which matches the default `EMBEDDING_MODEL` (`text-embedding-3-small`). The size is `EMBEDDING_DIMENSIONS` in `models.py`. A model with a different size needs a new value there and a new migration.

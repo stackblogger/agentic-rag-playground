@@ -41,6 +41,7 @@ GET /search -> embed the query -> find nearest chunks in Postgres -> return them
 ```
 
 - Closest chunks are found with cosine distance. `score` is `1 - distance`, so higher is better.
+- The `embedding` column has an HNSW index, so big tables stay fast. Results are approximate, see [database](database.md).
 - The query must use the same embedding model as the chunks.
 
 ## Chat
