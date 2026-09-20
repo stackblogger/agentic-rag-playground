@@ -13,10 +13,13 @@ One row for each uploaded file.
 | `file_path` | Where the file is saved in `UPLOAD_DIR` |
 | `content_type` | File type sent by the client |
 | `size_bytes` | File size |
+| `file_hash` | SHA-256 of the file, used to stop duplicate uploads |
 | `page_count` | Number of pages |
 | `extracted_text` | Full text from the PDF |
 | `status` | `uploaded`, `processed` or `failed` |
 | `created_at` | Upload time |
+
+`file_hash` stops the same file from being uploaded twice. The index on it is a plain one, not unique, because a failed upload keeps its row and that file may be uploaded again. Rows made before this column was added have `file_hash` empty.
 
 ## chunks
 

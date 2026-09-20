@@ -30,7 +30,9 @@ curl -X POST http://127.0.0.1:8000/documents -F "file=@/path/to/file.pdf"
 {"id": 1, "filename": "file.pdf", "page_count": 12, "chunk_count": 34, "status": "processed"}
 ```
 
-Errors: 400 if the file is not a PDF, 422 if the PDF cannot be read, 502 if the embeddings cannot be made.
+Errors: 400 if the file is not a PDF, 409 if the same file is already uploaded, 422 if the PDF cannot be read, 502 if the embeddings cannot be made.
+
+The same file cannot be uploaded twice. The check is on the file bytes (SHA-256), so a renamed copy is also stopped, and two different files with the same name are both kept. The 409 message has the id of the old document. A file that failed earlier can be uploaded again.
 
 A PDF that has only scanned images has no text to read, so it gives 0 chunks.
 

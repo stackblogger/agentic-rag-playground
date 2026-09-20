@@ -16,6 +16,8 @@ def upload_document(file: UploadFile, db: Session = Depends(get_db)):
         )
     except document_service.InvalidFileError as error:
         raise HTTPException(status_code=400, detail=str(error))
+    except document_service.DuplicateDocumentError as error:
+        raise HTTPException(status_code=409, detail=str(error))
     except document_service.PdfReadError as error:
         raise HTTPException(status_code=422, detail=str(error))
     except EmbeddingError as error:

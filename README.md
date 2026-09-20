@@ -57,7 +57,7 @@ Open http://127.0.0.1:8000. Port 8000 is used, so the app container must not be 
 
 ## Web UI
 
-- **Documents**: upload PDFs, see the list, delete a document.
+- **Documents**: upload PDFs, see the list, delete a document. The same file cannot be uploaded twice.
 - **Search**: find the chunks with the closest meaning to a query.
 - **Chat**: ask questions and get answers from the documents, with sources.
 - **Status**: check if the API and the database are working.

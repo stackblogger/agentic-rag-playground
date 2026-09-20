@@ -28,9 +28,10 @@ Services raise their own errors, and the routes change them into HTTP codes (400
 ## Upload
 
 ```
-POST /documents -> save file -> read text (pypdf) -> cut chunks -> make embeddings -> save in database
+POST /documents -> check the file hash -> save file -> read text (pypdf) -> cut chunks -> make embeddings -> save in database
 ```
 
+- The SHA-256 of the file is taken before saving. If a processed document has the same hash, the upload stops with 409 and nothing is saved on disk.
 - Chunks are cut page by page, and each chunk keeps its page number.
 - If the PDF cannot be read or embeddings fail, the document is saved as `failed` and no chunks are kept.
 

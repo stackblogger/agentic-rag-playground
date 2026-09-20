@@ -17,6 +17,7 @@ class Document(Base):
     file_path: Mapped[str] = mapped_column(String(500))
     content_type: Mapped[str | None] = mapped_column(String(100))
     size_bytes: Mapped[int | None] = mapped_column(BigInteger)
+    file_hash: Mapped[str | None] = mapped_column(String(64), index=True)
     page_count: Mapped[int | None]
     extracted_text: Mapped[str | None] = mapped_column(Text)
     status: Mapped[str] = mapped_column(String(20), server_default="uploaded")

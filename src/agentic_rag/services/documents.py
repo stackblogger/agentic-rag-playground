@@ -1,3 +1,4 @@
+import hashlib
 import logging
 import shutil
 import time
@@ -30,6 +31,34 @@ class DocumentNotFoundError(Exception):
     pass
 
 
+class DuplicateDocumentError(Exception):
+    """The same file is already uploaded. Keeps the id of the old document."""
+
+    def __init__(self, document: Document) -> None:
+        super().__init__(f"This file is already uploaded as document {document.id} ({document.filename})")
+        self.document = document
+
+
+def hash_file(file_obj: BinaryIO) -> str:
+    """SHA-256 of the file, read in small blocks so big files do not fill the memory."""
+    digest = hashlib.sha256()
+    for block in iter(lambda: file_obj.read(1024 * 1024), b""):
+        digest.update(block)
+    file_obj.seek(0)
+    return digest.hexdigest()
+
+
+def find_same_file(db: Session, file_hash: str) -> Document | None:
+    """Looks for a document with the same bytes. Failed ones are skipped, so they can be uploaded again."""
+    query = (
+        select(Document)
+        .where(Document.file_hash == file_hash, Document.status == "processed")
+        .order_by(Document.id)
+        .limit(1)
+    )
+    return db.execute(query).scalars().first()
+
+
 def save_file(file_obj: BinaryIO) -> Path:
     upload_dir = Path(settings.upload_dir)
     upload_dir.mkdir(parents=True, exist_ok=True)
@@ -54,12 +83,19 @@ def upload_document(
         logger.warning("Rejected a file that is not a PDF: %s", filename)
         raise InvalidFileError("Only PDF files are allowed")
 
+    file_hash = hash_file(file_obj)
+    same_document = find_same_file(db, file_hash)
+    if same_document is not None:
+        logger.info("Same file is already uploaded as document id=%s, upload stopped", same_document.id)
+        raise DuplicateDocumentError(same_document)
+
     file_path = save_file(file_obj)
     document = Document(
         filename=filename,
         file_path=str(file_path),
         content_type=content_type,
         size_bytes=file_path.stat().st_size,
+        file_hash=file_hash,
     )
     logger.info("Upload started: %s (%d bytes)", filename, document.size_bytes)
 
