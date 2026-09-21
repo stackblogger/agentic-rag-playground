@@ -87,7 +87,7 @@ Settings are read from environment variables or the `.env` file (see `.env.examp
 | `OPENAI_API_KEY` | API key for OpenAI, read by LiteLLM | empty |
 | `LLM_MODEL` | Model for chat (any LiteLLM model that supports tool calling) | `gpt-4o-mini` |
 | `EMBEDDING_MODEL` | Model for embeddings | `text-embedding-3-small` |
-| `DATABASE_URL` | Postgres connection string | `postgresql+psycopg://postgres:postgres@localhost:5432/agentic_rag` |
+| `DATABASE_URL` | Postgres connection string | Sample in `.env.example` file |
 | `UPLOAD_DIR` | Folder where uploaded files are kept | `data/uploads` |
 | `CHUNK_SIZE` | Maximum characters in one chunk | `1000` |
 | `CHUNK_OVERLAP` | Characters shared by two chunks next to each other | `200` |
