@@ -1,4 +1,8 @@
-# Agentic RAG Playground
+<p align="center">
+  <img src="docs/agentic-rag-playground.png" alt="Agentic-RAG-Playground" />
+</p>
+
+<h1 align="center"># Agentic RAG Playground</h1>
 
 [![Tests](https://github.com/stackblogger/agentic-rag-playground/actions/workflows/tests.yml/badge.svg)](https://github.com/stackblogger/agentic-rag-playground/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
