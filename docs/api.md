@@ -60,6 +60,8 @@ curl "http://127.0.0.1:8000/search?query=how%20long%20do%20cats%20sleep&limit=5"
 
 `limit` is from 1 to 20 (default 5).
 
+Results are first found by vector search, then reordered by the chat LLM so the most relevant ones come first (see [architecture](architecture.md)). The `score` field stays the vector similarity score; reranking only changes the order. This step can be turned off with the `RERANK_ENABLED` setting.
+
 ```json
 [
   {

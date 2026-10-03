@@ -18,7 +18,7 @@ Code is in `src/agentic_rag/`. A layer only calls the layers below it.
 - `services/`: main logic of each feature.
 - `agents/`: the chat agent.
 - `ingestion/`: read PDF, cut text into chunks.
-- `retrieval/`: the vector search query.
+- `retrieval/`: the vector search query and the LLM reranking step.
 - `llm/`: LiteLLM calls (embeddings and chat).
 - `db/`: connection and models.
 - `core/`: settings and logging setup.
@@ -38,10 +38,13 @@ POST /documents -> check the file hash -> save file -> read text (pypdf) -> cut 
 ## Search
 
 ```
-GET /search -> embed the query -> find nearest chunks in Postgres -> return them
+GET /search -> embed the query -> find nearest chunks in Postgres -> rerank with the LLM -> return them
 ```
 
-- Closest chunks are found with cosine distance. `score` is `1 - distance`, so higher is better.
+- Closest chunks are found with cosine distance. `score` is `1 - distance`, so higher is better. Reranking does not change this score, only the order.
+- More chunks than asked for are fetched first (up to 30), then the chat LLM looks at the query and these chunks together and puts the most relevant ones first. Only the top `limit` chunks are kept. This is in `retrieval/rerank.py`.
+- If the rerank call fails, the plain vector search order is used instead, so search still works.
+- Reranking can be turned off with the `RERANK_ENABLED` setting.
 - The `embedding` column has an HNSW index, so big tables stay fast. Results are approximate, see [database](database.md).
 - The query must use the same embedding model as the chunks.
 
@@ -54,6 +57,7 @@ POST /chat -> agent asks the LLM
 ```
 
 - The LLM has a `search_documents` tool and decides by itself when to use it. It can search again with different words.
+- This tool runs the same search as `GET /search`, so its results are reranked too.
 - It can search at most `AGENT_MAX_STEPS` times, and then it must answer.
 - The model in `LLM_MODEL` must support tool calling. OpenAI chat models do.
 - Each question is answered on its own. Earlier questions are not remembered.
