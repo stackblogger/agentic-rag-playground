@@ -8,3 +8,4 @@ psycopg[binary]
 pgvector
 pypdf
 litellm
+mcp>=2
