@@ -42,7 +42,7 @@ if (window.hljs) {
 }
 
 // ---------- docs viewer (shows the markdown files of the repo) ----------
-const docFiles = { architecture: "architecture.md", api: "api.md", database: "database.md" };
+const docFiles = { architecture: "architecture.md", api: "api.md", database: "database.md", mcp: "mcp.md" };
 
 async function showDoc(name) {
   if (!docFiles[name]) {

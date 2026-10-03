@@ -15,6 +15,7 @@ The web UI is plain HTML, CSS and JS, served by the same FastAPI app. LiteLLM is
 Code is in `src/agentic_rag/`. A layer only calls the layers below it.
 
 - `api/`: takes the request and gives the response. No main logic here.
+- `mcp_server/`: the tools for MCP clients. It has the same job as `api/`, so no main logic here either.
 - `services/`: main logic of each feature.
 - `agents/`: the chat agent.
 - `ingestion/`: read PDF, cut text into chunks.
@@ -61,6 +62,17 @@ POST /chat -> agent asks the LLM
 - It can search at most `AGENT_MAX_STEPS` times, and then it must answer.
 - The model in `LLM_MODEL` must support tool calling. OpenAI chat models do.
 - Each question is answered on its own. Earlier questions are not remembered.
+
+## MCP server
+
+```
+MCP client -> mcp_server tool -> services -> Postgres
+```
+
+- The server is in `mcp_server/` and runs on stdio. It has two read-only tools, `list_documents` and `search_documents`. They call the same services as `GET /documents` and `GET /search`, so reranking works the same.
+- A tool opens its own database session and closes it when done.
+- A failed embedding call is returned to the client as a tool error with a clear message.
+- How to run it and connect a client is in [MCP](mcp.md).
 
 ## Delete
 
