@@ -17,7 +17,8 @@ def search(query):
 
 def test_chat_searches_the_documents_and_answers(client, add_document, fake_llm):
     add_document("pets.pdf", PETS)
-    calls = fake_llm([search("cats sleep"), answer("Cats sleep 12 to 16 hours.")])
+    # replies in order: the tool call, the rerank order for the 2 chunks found, then the final answer
+    calls = fake_llm([search("cats sleep"), SimpleNamespace(content="[1, 2]"), answer("Cats sleep 12 to 16 hours.")])
 
     response = client.post("/chat", json={"question": "How long do cats sleep?", "limit": 1})
 
@@ -27,7 +28,7 @@ def test_chat_searches_the_documents_and_answers(client, add_document, fake_llm)
     assert body["sources"][0]["filename"] == "pets.pdf"
     assert body["sources"][0]["page_number"] == 1
     # the chunk found in the database was given to the LLM
-    tool_message = calls[1][-1]
+    tool_message = calls[2][-1]
     assert tool_message["role"] == "tool"
     assert PETS[0][1] in tool_message["content"]
 

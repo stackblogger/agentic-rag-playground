@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 import litellm
 
 PETS = [(1, "Cats sleep 12 to 16 hours a day."), (2, "Dogs need daily walks.")]
@@ -13,6 +15,16 @@ def test_closest_chunk_comes_first(client, add_document):
     assert first["content"] == PETS[0][1]
     assert (first["filename"], first["page_number"]) == ("pets.pdf", 1)
     assert first["score"] > second["score"]
+
+
+def test_reranking_can_change_the_order(client, add_document, fake_llm):
+    add_document("pets.pdf", PETS)
+    fake_llm([SimpleNamespace(content="[2, 1]")])
+
+    response = client.get("/search", params={"query": "how long do cats sleep?"})
+
+    first, second = response.json()
+    assert (first["content"], second["content"]) == (PETS[1][1], PETS[0][1])
 
 
 def test_limit_is_used(client, add_document):
