@@ -22,6 +22,7 @@ RAG means "Retrieval Augmented Generation". We first find the useful parts of th
 - Search documents by meaning, not just keywords, using vector similarity
 - Rerank search results with the chat LLM so the best matches come first
 - Chat with the documents through an agent that can search again with better words and gives sources for its answers
+- Use the documents from MCP clients like Claude Desktop and Claude Code through a read-only MCP server (list and search)
 - Use any LLM or embedding provider supported by LiteLLM, changed from settings only
 - Plain web UI for documents, search, chat and status, with no build step
 - Health checks for the API and the database
@@ -36,6 +37,7 @@ RAG means "Retrieval Augmented Generation". We first find the useful parts of th
 - Python 3.11+, FastAPI
 - PostgreSQL with pgvector, SQLAlchemy, Alembic
 - LiteLLM (one interface for many LLM providers), pypdf
+- MCP Python SDK for the MCP server
 - Web UI with Tabler and plain JavaScript (loaded from a CDN, no build step)
 - Docker and Docker Compose
 
@@ -94,6 +96,16 @@ curl -X POST http://127.0.0.1:8000/chat -H "Content-Type: application/json" \
 
 All routes, responses and error codes are in [docs/api.md](docs/api.md). API docs are also at http://127.0.0.1:8000/docs.
 
+## MCP server
+
+MCP clients like Claude Desktop, Claude Code and Cursor can search and list the uploaded documents through a read-only MCP server. It has two tools, `list_documents` and `search_documents`, and runs on the same machine as the client.
+
+```bash
+PYTHONPATH=src python -m agentic_rag.mcp_server
+```
+
+Postgres must be running. Client setup examples and the tool details are in [docs/mcp.md](docs/mcp.md).
+
 ## Settings
 
 Settings are read from environment variables or the `.env` file (see `.env.example`).
@@ -126,6 +138,7 @@ Unit tests need nothing. Integration tests need Postgres running (`docker compos
 - [Architecture](docs/architecture.md): how the app is built and how upload, search and chat work.
 - [API](docs/api.md): all routes with examples and error codes.
 - [Database](docs/database.md): tables, the search index, embedding size and migration commands.
+- [MCP](docs/mcp.md): the MCP server tools and how to connect a client.
 
 ## Contributing
 
