@@ -14,8 +14,9 @@ venv/
 .env.*
 !.env.example
 
-# Uploaded files (keep the folder, ignore the files)
+# Uploaded files and database data (kept on the host, not in git)
 data/uploads/*
+data/postgres/
 
 # Tests and tools
 .pytest_cache/

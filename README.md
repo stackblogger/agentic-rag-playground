@@ -40,7 +40,7 @@ docker compose up -d --build
 
 Open http://127.0.0.1:8000. The app runs the database migrations by itself when it starts.
 
-- Uploaded files are kept in `data/uploads/`. Database data is kept in a Docker volume.
+- Uploaded files are kept in `data/uploads/` and database data in `data/postgres/`, both inside the project folder, so cleaning up Docker volumes does not remove them.
 - `DATABASE_URL` and `UPLOAD_DIR` in `.env` are ignored in Docker, because `docker-compose.yml` sets them.
 - Logs: `docker compose logs -f app`. Stop: `docker compose down`.
 
