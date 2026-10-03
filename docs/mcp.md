@@ -38,6 +38,16 @@ The server waits for a client on stdin and stdout, so nothing is shown in the te
 
 Settings are the same as the API (see the README). The `.env` file is only read when the server starts inside the project folder. A client usually starts it from another folder, so pass the settings as environment variables in the client config, as in the examples below.
 
+## Try it in the MCP Inspector
+
+The MCP Inspector is a browser page to call the tools by hand. Run this from the project folder, with Postgres running:
+
+```bash
+npx @modelcontextprotocol/inspector -e PYTHONPATH=$PWD/src .venv/bin/python -m agentic_rag.mcp_server
+```
+
+Open the address it prints, press Connect, and use the Tools tab. `PYTHONPATH` is passed with `-e` because the Inspector starts the server as a separate process.
+
 ## Connect a client
 
 Use the full path of the project folder and of the Python that has the packages installed (for example `.venv/bin/python`). `DATABASE_URL` is the one from `.env.example` when Postgres runs with `docker compose up -d db`.

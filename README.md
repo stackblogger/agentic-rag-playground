@@ -106,6 +106,18 @@ PYTHONPATH=src python -m agentic_rag.mcp_server
 
 Postgres must be running. Client setup examples and the tool details are in [docs/mcp.md](docs/mcp.md).
 
+### Try it in the MCP Inspector
+
+The MCP Inspector is a browser page to call the tools by hand. Run this from the project folder:
+
+```bash
+npx @modelcontextprotocol/inspector -e PYTHONPATH=$PWD/src .venv/bin/python -m agentic_rag.mcp_server
+```
+
+![Tools of the MCP server in the MCP Inspector](docs/agentic-rag-mcp-tools.png)
+
+![Running the list tool of the MCP server in the MCP Inspector](docs/agentic-rag-mcp-list-tool.png)
+
 ## Settings
 
 Settings are read from environment variables or the `.env` file (see `.env.example`).

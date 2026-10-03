@@ -34,6 +34,7 @@
           <a href="#how-it-works">How it works</a>
           <a href="#architecture">Architecture</a>
           <a href="#quick-start">Quick start</a>
+          <a href="#mcp-inspector">MCP</a>
           <a href="#docs">Docs</a>
         </nav>
         <div class="header-actions">
@@ -184,6 +185,33 @@ alembic upgrade head        # create the tables
 uvicorn agentic_rag.api.main:app --app-dir src --reload</code></pre>
           </div>
           <p class="hint" style="text-align: center">Then open <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> for the web UI.</p>
+        </div>
+      </section>
+
+      <section id="mcp-inspector" class="soft">
+        <div class="container">
+          <div class="section-head">
+            <h2>MCP Inspector</h2>
+            <p>The MCP server can be tried in the MCP Inspector, a browser page to call the tools by hand.</p>
+          </div>
+
+          <div class="code">
+            <button class="copy">Copy</button>
+<pre><code class="language-bash">npx @modelcontextprotocol/inspector -e PYTHONPATH=$PWD/src .venv/bin/python -m agentic_rag.mcp_server</code></pre>
+          </div>
+          <p class="hint" style="text-align: center">Run it from the project folder, with Postgres running. Read more in the <a href="#docs" data-doc="mcp">MCP doc</a> below.</p>
+
+          <div class="figure">
+            <a href="agentic-rag-mcp-tools.png" target="_blank" rel="noopener" title="Open full size">
+              <img src="agentic-rag-mcp-tools.png" alt="Tools of the MCP server in the MCP Inspector" loading="lazy" />
+            </a>
+          </div>
+          <div class="figure" style="margin-top: 24px">
+            <a href="agentic-rag-mcp-list-tool.png" target="_blank" rel="noopener" title="Open full size">
+              <img src="agentic-rag-mcp-list-tool.png" alt="Running the list tool of the MCP server in the MCP Inspector" loading="lazy" />
+            </a>
+          </div>
+          <p class="figure-caption">Click a picture to open it full size.</p>
         </div>
       </section>
 
