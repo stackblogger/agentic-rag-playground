@@ -15,6 +15,18 @@ RAG means "Retrieval Augmented Generation". We first find the useful parts of th
 
 "Agentic" means the LLM decides by itself what to do. For example, it can search again with better words if the first results are not good.
 
+## Features
+
+- Upload PDF documents, with duplicate files blocked automatically by their content
+- List and delete uploaded documents
+- Search documents by meaning, not just keywords, using vector similarity
+- Rerank search results with the chat LLM so the best matches come first
+- Chat with the documents through an agent that can search again with better words and gives sources for its answers
+- Use any LLM or embedding provider supported by LiteLLM, changed from settings only
+- Plain web UI for documents, search, chat and status, with no build step
+- Health checks for the API and the database
+- Uploaded files and database data are kept in the project folder, so cleaning up Docker volumes does not remove them
+
 ## Architecture
 
 ![Architecture of Agentic RAG Playground](docs/agentic-rag-architecture.png)
